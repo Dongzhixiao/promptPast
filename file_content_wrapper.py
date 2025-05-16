@@ -59,6 +59,9 @@ class FileContentWrapper:
         )
         self.files_listbox.pack(pady=10, padx=10, fill=tk.BOTH, expand=True)
         
+        # Bind single click to toggle selection
+        self.files_listbox.bind('<Button-1>', self.toggle_selection)
+        
         # Content display text
         tk.Label(self.root, text="处理后的内容:").pack()
         
@@ -107,7 +110,7 @@ class FileContentWrapper:
                 file_path = os.path.join(folder_path, file)
                 if (os.path.isfile(file_path) and 
                     file_path not in existing_files and
-                    not file_path.lower().endswith(('.exe', '.dll', '.bin'))):
+                    not file_path.lower().endswith(('.exe', '.dll', '.bin', '.zip', '.docx'))):
                     self.selected_files.append(file_path)
             self.update_files_list()
 
@@ -142,7 +145,7 @@ class FileContentWrapper:
             file_exists = any(os.path.normpath(file_path) == os.path.normpath(f) 
                             for f in self.selected_files)
             
-            if not file_exists and not file_path.lower().endswith(('.exe', '.dll', '.bin')):
+            if not file_exists and not file_path.lower().endswith(('.exe', '.dll', '.bin', '.zip', '.docx')):
                 self.selected_files.append(file_path)
                 added_files = True
         
@@ -150,11 +153,29 @@ class FileContentWrapper:
         if added_files:
             self.update_files_list()
     
+    def toggle_selection(self, event):
+        # Get clicked item index
+        index = self.files_listbox.nearest(event.y)
+        
+        # Toggle selection state
+        if index in self.files_listbox.curselection():
+            self.files_listbox.selection_clear(index)
+        else:
+            self.files_listbox.selection_set(index)
+        
+        # Prevent default selection behavior
+        return 'break'
+    
     def remove_selected(self):
-        # Remove selected items from list
+        # Remove all selected items at once
         selected_indices = self.files_listbox.curselection()
-        for i in reversed(selected_indices):
+        if not selected_indices:
+            return
+            
+        # Remove from selected_files list
+        for i in reversed(sorted(selected_indices)):
             self.selected_files.pop(i)
+            
         self.update_files_list()
     
     def update_files_list(self):
@@ -192,7 +213,7 @@ class FileContentWrapper:
         # Add footer text after processing all files
         filenames = [os.path.basename(f) for f in self.selected_files]
         tags = "".join(f"<{name}>" for name in filenames)
-        footer = f"\n\n请仔细阅读上述{tags}标签里面的内容，然后按照下面的要求进行回复："
+        footer = f"\n\n请仔细阅读上述{tags}标签里面的内容，然后按照下面的要求进行回复或处理："
         self.content_text.insert(tk.END, footer)
     
     def copy_content(self):
