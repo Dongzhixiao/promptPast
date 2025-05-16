@@ -1,0 +1,2 @@
+# This program uses Python standard libraries only
+# No additional pip packages are required
