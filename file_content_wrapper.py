@@ -189,6 +189,29 @@ class FileContentWrapper:
             messagebox.showwarning("警告", "没有选择任何文件!")
             return
         
+        # Pre-check files for readability
+        error_files = []
+        for file_path in self.selected_files:
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    f.read()
+            except Exception:
+                error_files.append(file_path)
+        
+        # Block processing if problematic files found
+        if error_files:
+            file_list = '\n'.join(os.path.basename(f) for f in error_files)
+            messagebox.showwarning(
+                "警告", 
+                f"以下文件无法处理，已自动选中:\n{file_list}\n请移除这些文件后再试"
+            )
+            # Select problematic files in listbox
+            self.files_listbox.selection_clear(0, tk.END)
+            for i, file_path in enumerate(self.selected_files):
+                if file_path in error_files:
+                    self.files_listbox.selection_set(i)
+            return
+        
         # Clear content text
         self.content_text.delete(1.0, tk.END)
         
