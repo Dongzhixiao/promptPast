@@ -1,6 +1,6 @@
 # 🚀 文件内容包装神器 - 大语言模型最佳搭档
 
-![Star History](https://img.shields.io/github/stars/Dongzhixiao/file-content-wrapper?style=social) ![License](https://img.shields.io/badge/license-MIT-blue)
+![Star History](https://img.shields.io/github/stars/Dongzhixiao/promptPast?style=social) ![License](https://img.shields.io/badge/license-MIT-blue)
 
 ✨ **专为AI时代设计的文件处理工具** - 一键批量处理多个文件内容，自动添加`<filename>`标签，完美适配DeepSeek/Claude/GPT等大语言模型！
 
@@ -33,7 +33,7 @@
    - 或通过命令行运行: `python file_content_wrapper.py`
 
 ## 🖼️ 使用截图
-(此处可添加程序界面截图)
+![界面截图](imgs/1.png)
 
 ## 🎯 完美适配大语言模型工作流
 
